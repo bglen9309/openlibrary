@@ -11,15 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: storybook
-          fetch-depth: 0
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
       - run: |
         npm ci
-        git rebase master
+        git checkout storybook
+        git pull master
         npm run build-storybook
         git add .
         git commit -m "Generated storybook site"
