@@ -1,0 +1,25 @@
+name: publish_storybook
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'stories/**'
+
+jobs:
+  publish_storybook:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: storybook
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - run: |
+        npm ci
+        git rebase master
+        npm run build-storybook
+        git add .
+        git commit -m "Generated storybook site"
+
