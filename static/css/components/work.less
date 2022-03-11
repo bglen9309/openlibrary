@@ -44,6 +44,14 @@ div.editionAbout {
 .work-title{
   margin-top: 5px;
   margin-bottom: 0;
+  height: 40px;
+
+  &.sticky {
+    position: sticky;
+    background: @white;
+    z-index: @z-index-level-3;
+    top: 0;
+  }
 }
 
 .work-subtitle{
@@ -148,7 +156,7 @@ h2.edition-byline {
 
   &.sticky {
     position: sticky;
-    top: 0;
+    top: 40px;
     display: block;
     background: @white;
     z-index: @z-index-level-3;
@@ -268,6 +276,17 @@ div.editionTools {
 
   h4:last-child {
     padding-right: 0;
+  }
+}
+
+.id-list {
+  font-size: 12px;
+  border-bottom: 1px solid @lighter-grey;
+  padding-bottom: 10px;
+
+  li {
+    display: flex;
+    justify-content: space-between;
   }
 }
 
