@@ -6,7 +6,8 @@
 .readers-stats {
   color: @grey;
   font-size: .9em;
-  li {
+  display: flex;
+  div {
     list-style-type: none;
     display: inline-block;
     &:not(:last-child):after {
@@ -25,4 +26,9 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+}
+
+ul.reading-log-stats {
+  background: @lightest-grey;
+  display: flex;
 }

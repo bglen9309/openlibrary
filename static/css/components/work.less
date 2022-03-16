@@ -44,6 +44,14 @@ div.editionAbout {
 .work-title{
   margin-top: 5px;
   margin-bottom: 0;
+  height: 40px;
+
+  &.sticky {
+    position: sticky;
+    background: @white;
+    z-index: @z-index-level-3;
+    top: 0;
+  }
 }
 
 .work-subtitle{
@@ -83,6 +91,17 @@ div.editionAbout {
   vertical-align: middle;
 }
 
+.clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+}
+
+.clamp::before {
+  content: "+ ";
+}
+
 .restricted-view{
   display: block;
   z-index: @z-index-level-1;
@@ -90,7 +109,7 @@ div.editionAbout {
 
 .restricted-height{
   overflow: hidden;
-  height: 57px;
+  height: 60px;
 }
 
 .section, .section h6 {
@@ -130,14 +149,14 @@ h2.edition-byline {
 }
 
 .work-menu {
-  border-bottom: 1px solid @lighter-grey;
+  border-bottom: 1px solid @light-grey;
   padding-bottom: 5px;
   font-weight: bold;
   margin-top: 20px;
 
   &.sticky {
     position: sticky;
-    top: 0;
+    top: 30px;
     display: block;
     background: @white;
     z-index: @z-index-level-3;
@@ -158,11 +177,11 @@ h2.edition-byline {
 }
 
 .work-menu li.selected {
-  border-bottom: 2px solid @link-blue;
+  border-bottom: 3px solid @link-blue;
 }
 
 .work-menu li:hover {
-  border-bottom: 2px solid @link-blue;
+  border-bottom: 3px solid @link-blue;
 }
 
 .work-menu li.selected a {
@@ -170,7 +189,7 @@ h2.edition-byline {
 }
 
 a.section-anchor {
-  height: 45px;
+  height: 20px;
   display: block;
 }
 
@@ -247,8 +266,23 @@ div.editionTools {
 
 .edition-omniline {
   display: flex;
+  padding: 10px;
+  overflow-x: auto;
   border-bottom: 1px solid @lighter-grey;
   margin-bottom: 10px;
+  background: @grey-fafafa;
+
+  .edition-omniline-item {
+    flex: 1;
+    font-size: .8em;
+  }
+
+  .edition-omniline-item div {
+    font-weight: bold;
+  }
+
+  .edition-omniline-item span {    
+  }
 
   h4 {
     padding-right: 5px;
@@ -256,6 +290,17 @@ div.editionTools {
 
   h4:last-child {
     padding-right: 0;
+  }
+}
+
+.id-list {
+  font-size: 12px;
+  border-bottom: 1px solid @lighter-grey;
+  padding-bottom: 10px;
+
+  li {
+    display: flex;
+    justify-content: space-between;
   }
 }
 
@@ -267,7 +312,6 @@ div.editionTools {
 }
 
 .preview-languages {
-  margin-bottom: -30px !important;
   font-size: .8em;
   color: @grey;
 }

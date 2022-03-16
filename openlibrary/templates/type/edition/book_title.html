@@ -2,7 +2,7 @@ $def with (work, edition)
 
 $ book_title = edition.get('title', '') or (work.title if work else '')
 
-<h1 class="work-title" itemprop="name">$book_title</h1>
+<h1 class="work-title sticky" itemprop="name">$book_title</h1>
 
 $if edition:
   $if edition.subtitle:
