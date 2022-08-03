@@ -1033,14 +1033,13 @@ class PartialsPOC(delegate.page):
 
     def POST(self):
         data = json.loads(web.data())
-        title = data['template']
-        args = data['args']
-        kwargs = data['kwargs']
 
-        valid = self.validate_data(data)
+        template_name = data.get('template', '')
+        args = data.get('args', [])
+        kwargs = data.get('kwargs', {})
 
-        if valid:
-            partial = render_template(title, *args, **kwargs)
+        if self.validate_data(data):
+            partial = render_template(template_name, *args, **kwargs)
             return delegate.RawText(partial)
         else:
             return delegate.RawText('Render error')

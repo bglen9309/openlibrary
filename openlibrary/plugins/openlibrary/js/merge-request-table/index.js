@@ -117,8 +117,14 @@ async function updateCommentsView(mrid, comment) {
     const commentCell = document.querySelector(`#comment-cell-${mrid}`)
     const newCommentDiv = commentCell.querySelector('.comment-cell__newest-comment')
 
-    await fetch(`/merges/partials?type=comment&comment=${comment}`, {
-        method: 'GET'
+    const kwargs = {comment_str: comment}
+    const data = {
+        template: 'merge_queue/comment',
+        kwargs: kwargs
+    }
+    await fetch('/_poc/partials', {
+        method: 'POST',
+        body: JSON.stringify(data)
     })
         .then(result => result.text())
         .then(html => {
