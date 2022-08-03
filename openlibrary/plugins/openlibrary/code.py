@@ -1016,6 +1016,39 @@ class Partials(delegate.page):
         return delegate.RawText(json.dumps(partial), content_type="application/json")
 
 
+ALLOWED_PARTIALS = (
+    'support',
+    'trending',
+    'notfound',
+    'barcodescanner',
+    'merge_queue/comment',
+)
+
+
+class PartialsPOC(delegate.page):
+    path = '/_poc/partials'
+
+    def GET(self):
+        return render_template('partials_poc', list(ALLOWED_PARTIALS))
+
+    def POST(self):
+        data = json.loads(web.data())
+        title = data['template']
+        args = data['args']
+        kwargs = data['kwargs']
+
+        valid = self.validate_data(data)
+
+        if valid:
+            partial = render_template(title, *args, **kwargs)
+            return delegate.RawText(partial)
+        else:
+            return delegate.RawText('Render error')
+
+    def validate_data(self, data):
+        return data.get('template', '') in ALLOWED_PARTIALS
+
+
 def is_bot():
     r"""Generated on ol-www1 within /var/log/nginx with:
 

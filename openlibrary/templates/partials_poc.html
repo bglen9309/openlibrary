@@ -1,0 +1,109 @@
+$def with (permitted_templates)
+$# permitted_templates: list : Names of templates that can be rendered by partials controller
+
+<div>
+  <form id="template-poc-form">
+    <label for="template">Template name:</label>
+    <select name="template" id="template-selector">
+      <option value="">Choose a template</option>
+      $for name in permitted_templates:
+        <option value="$name">$name</option>
+    </select>
+    <br>
+    <label for="args">Add an arg:</label>
+    <input id="arg-input" type="text" placeholder="Arghhhh" name="arg">
+    <input id="add-arg" type="button" value="Add arg">
+    <br>
+    <div id="chosen-args"></div>
+    <label for="kwarg-name">Kwarg Name:</label>
+    <input id="kwarg-name" type="text" name="kwarg-name">
+    <label for="kwarg-value">Kwarg Value:</label>
+    <input id="kwarg-value" type="text" name="kwarg-value">
+    <input id="add-kwarg" type="button" value="Add kwarg">
+    <div id="chosen-kwargs"></div>
+    <input id="submit-button" type="submit" value="Fetch Partial">
+  </form>
+  <h2>Results:</h2>
+  <div id="template-poc-results">
+
+  </div>
+
+  <script>
+    const argDisplay = document.querySelector('#chosen-args')
+    const kwargDisplay = document.querySelector('#chosen-kwargs')
+
+    const templateSelector = document.querySelector('#template-selector')
+
+    const argInput = document.querySelector('#arg-input')
+    const argButton = document.querySelector('#add-arg')
+
+    const kwargValueInput = document.querySelector('#kwarg-value')
+    const kwargNameInput = document.querySelector('#kwarg-name')
+    const kwargButton = document.querySelector('#add-kwarg')
+
+    const submitButton = document.querySelector('#submit-button')
+
+    const resultsContainer = document.querySelector('#template-poc-results')
+
+    const args = []
+    const kwargs = {}
+
+    argButton.addEventListener('click', function() {
+      const value = argInput.value
+      args.push(value)
+      const p = document.createElement('p')
+      p.innerText = value
+      argDisplay.appendChild(p)
+      argInput.value = ''
+    })
+
+    kwargButton.addEventListener('click', function(){
+      const name = kwargNameInput.value
+      const value = kwargValueInput.value
+      kwargs[name] = value
+      const p = document.createElement('p')
+      p.innerText = name + ": " + value
+      kwargDisplay.appendChild(p)
+      kwargNameInput.value = ''
+      kwargValueInput.value = ''
+    })
+
+    submitButton.addEventListener('click', async function(evt){
+      evt.preventDefault()
+      const templateName = templateSelector.value
+      const data = {
+        template: templateName,
+        args: args,
+        kwargs: kwargs
+      }
+      console.log(data)
+      const results = await fetch('/_poc/partials', {
+        method: 'POST',
+        body: JSON.stringify(data)
+      })
+        .then((response) => response.text())
+        .then((text) => {
+          console.log(text)
+          console.log(typeof text)
+          resultsContainer.innerHTML = text
+          reset()
+        })
+
+    })
+
+    function reset() {
+      while(args.length) {
+        args.pop()
+      }
+      Object.keys(kwargs).forEach(key => delete kwargs[key])
+      removeChildren(argDisplay)
+      removeChildren(kwargDisplay)
+    }
+
+    function removeChildren(elem) {
+      while(elem.firstChild) {
+        elem.removeChild(elem.firstChild)
+      }
+    }
+  </script>
+</div>
