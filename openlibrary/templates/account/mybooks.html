@@ -5,7 +5,7 @@ $ current_goal = get_reading_goals()
 
 <div class="chip-group">
   $if not current_goal:
-    <span class="chip value-chip category-chip chip--selectable">
+    <span class="chip value-chip category-chip chip--selectable goal-chip">
       <a id="set-reading-goal-link" data-ol-link-track="MyBooksLandingPage|SetReadingGoal"
         href="javascript:;">$:_('Set <span id="reading-goal-current-year">2023</span> reading goal')</a>
     </span>
