@@ -520,20 +520,26 @@ function addGoalSubmissionListener(submitButton) {
                     modal.close()
                 }
 
-                const yearlyGoalSection = modal.closest('.yearly-goal-section')
-                if (formData.get('is_update')) {  // Progress component exists on page
-                    const goalInput = form.querySelector('input[name=goal]')
+		const progressContainerExists = formData.get('is_update')
+                const yearlyGoalSection = document.querySelector('.yearly-goal-section')
+		const goalInput = progressContainerExists ? document.querySelector('input[name=goal]') : false
+                if (goalInput) {  // Progress component exists on page
                     const isDeleted = Number(goalInput.value) === 0
 
                     if (isDeleted) {
                         const chipGroup = yearlyGoalSection.querySelector('.chip-group')
                         const goalContainer = yearlyGoalSection.querySelector('#reading-goal-container')
-                        goalContainer.remove()
-                        chipGroup.classList.remove('hidden')
+			if (chipGroup && goalContainer) {
+                            goalContainer.remove()
+                            chipGroup.classList.remove('hidden')
+			}
                     } else {
-                        const progressComponent = modal.closest('.reading-goal-progress')
-                        updateProgressComponent(progressComponent, Number(formData.get('goal')))
+                        const progressComponent = document.querySelector('.reading-goal-progress')
+			if (progressComponent) {
+                            updateProgressComponent(progressComponent, Number(formData.get('goal')))
+			}
                     }
+		    location.reload()
                 } else {
                     const goalYear = formData.get('year')
                     fetchProgressAndUpdateView(yearlyGoalSection, goalYear)
