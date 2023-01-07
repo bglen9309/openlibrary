@@ -415,14 +415,16 @@ function deleteEvent(rootElem, workOlid, eventId) {
  * Updates yearly goal form's current year to the patron's
  * local year.
  *
- * @param {HTMLElement} link Prompt for adding a reading goal
+ * @param {HTMLCollection<HTMLElement>} links Prompts for adding a reading goal
  */
-export function initYearlyGoalPrompt(link) {
+export function initYearlyGoalPrompt(links) {
     const yearlyGoalModal = document.querySelector('#yearly-goal-modal')
 
-    link.addEventListener('click', function() {
-        yearlyGoalModal.showModal()
-    })
+    for (const link of links) {
+        link.addEventListener('click', function() {
+            yearlyGoalModal.showModal()
+        })
+    }
 }
 
 /**
@@ -520,29 +522,27 @@ function addGoalSubmissionListener(submitButton) {
                     modal.close()
                 }
 
-		const progressContainerExists = formData.get('is_update')
-                const yearlyGoalSection = document.querySelector('.yearly-goal-section')
-		const goalInput = progressContainerExists ? document.querySelector('input[name=goal]') : false
-                if (goalInput) {  // Progress component exists on page
+                const yearlyGoalSection = modal.closest('.yearly-goal-section')
+                if (formData.get('is_update')) {  // Progress component exists on page
+                    const goalInput = form.querySelector('input[name=goal]')
                     const isDeleted = Number(goalInput.value) === 0
 
                     if (isDeleted) {
                         const chipGroup = yearlyGoalSection.querySelector('.chip-group')
                         const goalContainer = yearlyGoalSection.querySelector('#reading-goal-container')
-			if (chipGroup && goalContainer) {
-                            goalContainer.remove()
-                            chipGroup.classList.remove('hidden')
-			}
+                        goalContainer.remove()
+                        chipGroup.classList.remove('hidden')
                     } else {
-                        const progressComponent = document.querySelector('.reading-goal-progress')
-			if (progressComponent) {
-                            updateProgressComponent(progressComponent, Number(formData.get('goal')))
-			}
+                        const progressComponent = modal.closest('.reading-goal-progress')
+                        updateProgressComponent(progressComponent, Number(formData.get('goal')))
                     }
-		    location.reload()
                 } else {
                     const goalYear = formData.get('year')
                     fetchProgressAndUpdateView(yearlyGoalSection, goalYear)
+                    const banner = document.querySelector('#goal-announcement-banner')
+                    if (banner) {
+                        banner.remove()
+                    }
                 }
             })
     })
