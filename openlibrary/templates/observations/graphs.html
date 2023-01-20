@@ -1,0 +1,30 @@
+$def with (reader_observations)
+
+$code:
+  chart_tags = {
+    'totalParticipants': reader_observations['total_respondents'],
+    'totalTags': len(reader_observations['observations']),
+    'tags': []
+  }
+
+  for o in reader_observations['observations']:
+    tag = {
+      'label': o['label'],
+      'description': o['description'],
+      'participants': o['total_respondents_for_type'],
+      'responses': o['total_responses'],
+    }
+    values = []
+
+    for v in o['values']:
+      values.append({
+        'tag': v['value'],
+        'count': v['count']
+      })
+    tag['values'] = values
+    chart_tags['tags'].append(tag)
+
+
+<div class="graph-container" data-tags="$json_encode(chart_tags)">
+  <div class="community-tags-graph"></div>
+</div>

@@ -488,4 +488,10 @@ jQuery(function () {
         import(/* webpackChunkName "add-provider-link" */ './add_provider')
             .then(module => module.initAddProviderRowLink(addProviderRowLink))
     }
+
+    const graphContainer = document.querySelector('.graph-container')
+    if (graphContainer) {
+        import('./community-tags')
+            .then(module => module.initGraph(graphContainer))
+    }
 });
