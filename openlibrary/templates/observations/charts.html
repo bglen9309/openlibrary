@@ -32,8 +32,11 @@ $code:
   }
 
 $ num_tags = len(chart_tags['tags'])
+$ chart_type = 'pie'
+$if query_param('chartType'):
+  $ chart_type = query_param('chartType')
 
-<div class="chart-container" data-selectors="$json_encode(classes)" data-tags="$json_encode(chart_tags)">
+<div class="chart-container" data-chart-type="$chart_type" data-selectors="$json_encode(classes)" data-tags="$json_encode(chart_tags)">
   <div class="chart-header">
     $if num_tags > 1:
       <button class="$(classes['prevButton'][1:])">&lt;</button>
