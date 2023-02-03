@@ -1,25 +1,51 @@
 import * as d3 from 'd3'
 
-let data;
 
-const WIDTH = 400
-const HEIGHT = 400
+const WIDTH = 500
+const HEIGHT = 500
 const PADDING = 20
 
-export function initChart(chartContainer) {
-    data = JSON.parse(chartContainer.dataset['tags'])
+let chartElements = []
+let chartLabels = []
+let visibleChartIndex = 0
+let header
 
+export function initChart(chartContainer) {
+    const data = JSON.parse(chartContainer.dataset['tags'])
+    const selectors = JSON.parse(chartContainer.dataset['selectors'])
+    header = document.querySelector(selectors.header)
     if (data.tags.length > 0) {
-        createChart(data)
+        updateHeader(data.tags[0].label)
+        renderCharts(data, selectors.chartView)
+        if (data.tags.length > 1) {
+            chartLabels = data.tags.map(tag => tag.label)
+            const prevButton = document.querySelector(selectors.prevButton)
+            const nextButton = document.querySelector(selectors.nextButton)
+
+            initNavButtons(prevButton, nextButton)
+        }
     }
 }
 
-function createChart(data) {
-    const tag = data.tags[0]
+function updateHeader(text) {
+    header.textContent = text
+}
+
+function renderCharts(data, selector) {
+    for (const tag of data.tags) {
+        createChart(tag, selector)
+    }
+    chartElements = document.querySelector(selector).children
+    chartElements[0].classList.remove('hidden')
+}
+
+function createChart(tag, selector) {
     const chartData = tag.values.reduce((obj, item) => (obj[item.tag] = item.count, obj), {})
     const radius = Math.min(WIDTH, HEIGHT) / 2 - PADDING
 
-    const svg = d3.select('.community-tag-chart')
+    const svg = d3.select(selector)
+        .append('div')
+        .attr('class', `${selector.substring(1)}__chart hidden`)
         .append('svg')
         .attr('width', WIDTH)
         .attr('height', HEIGHT)
@@ -46,6 +72,8 @@ function createChart(data) {
         .attr('stroke', 'black')
         .style('stroke-width', '2px')
         .style('opacity', 0.7)
+        .append('title')
+        .text((d) => `Tagged "${d.data[0]}" by ${d.data[1]} ${d.data[1] === 1 ? 'patron' : 'patrons'}`)
 
     svg.selectAll('slices')
         .data(pieData)
@@ -54,4 +82,30 @@ function createChart(data) {
         .attr('transform', (d) => `translate(${arcGenerator.centroid(d)})`)
         .style('text-anchor', 'middle')
         .style('font-size', 17)
+}
+
+function initNavButtons(prevButton, nextButton) {
+    let chartIndex = 0
+
+    prevButton.addEventListener('click', () => {
+        --chartIndex;
+        if (chartIndex < 0) {
+            chartIndex = chartElements.length - 1
+        }
+        updateView(chartIndex);
+    })
+    nextButton.addEventListener('click', () => {
+        ++chartIndex;
+        chartIndex = chartIndex % chartElements.length
+        updateView(chartIndex)
+    })
+}
+
+function updateView(newIndex) {
+    chartElements[visibleChartIndex].classList.add('hidden')
+
+    chartElements[newIndex].classList.remove('hidden')
+    updateHeader(chartLabels[newIndex])
+
+    visibleChartIndex = newIndex
 }

@@ -24,7 +24,44 @@ $code:
     tag['values'] = values
     chart_tags['tags'].append(tag)
 
+  classes = {
+    'chartView': '.chart-view',
+    'header': '.chart-header__chart-label',
+    'prevButton': '.chart-header__prev-chart-btn',
+    'nextButton': '.chart-header__next-chart-btn',
+  }
 
-<div class="chart-container" data-tags="$json_encode(chart_tags)">
-  <div class="community-tag-chart"></div>
+$ num_tags = len(chart_tags['tags'])
+
+<div class="chart-container" data-selectors="$json_encode(classes)" data-tags="$json_encode(chart_tags)">
+  <div class="chart-header">
+    $if num_tags > 1:
+      <button class="$(classes['prevButton'][1:])">&lt;</button>
+    <h3 class="$(classes['header'][1:])"></h3>
+    $if num_tags > 1:
+      <button class="$(classes['nextButton'][1:])">&gt;</button>
+  </div>
+  <div class="$(classes['chartView'][1:])"></div>
 </div>
+
+<style>
+  .chart-container {
+    width: 600px;
+    margin: 0 auto;
+  }
+  .chart-container .respondent-count {
+    display: inline;
+    width: 600px;
+    font-size: 16px;
+    margin: 0 auto;
+  }
+  .chart-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .chart-view__chart svg {
+    display: block;
+    margin: 0 auto;
+  }
+</style>
