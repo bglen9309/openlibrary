@@ -6,20 +6,20 @@ const WIDTH = 400
 const HEIGHT = 400
 const PADDING = 20
 
-export function initGraph(graphContainer) {
-    data = JSON.parse(graphContainer.dataset['tags'])
+export function initChart(chartContainer) {
+    data = JSON.parse(chartContainer.dataset['tags'])
 
     if (data.tags.length > 0) {
-        createGraph(data)
+        createChart(data)
     }
 }
 
-function createGraph(data) {
+function createChart(data) {
     const tag = data.tags[0]
     const chartData = tag.values.reduce((obj, item) => (obj[item.tag] = item.count, obj), {})
     const radius = Math.min(WIDTH, HEIGHT) / 2 - PADDING
 
-    const svg = d3.select('.community-tags-graph')
+    const svg = d3.select('.community-tag-chart')
         .append('svg')
         .attr('width', WIDTH)
         .attr('height', HEIGHT)
@@ -28,7 +28,6 @@ function createGraph(data) {
 
     const color = d3.scaleOrdinal()
         .range(d3.schemeSet2)
-        // .range(['#003f5c', '#2f4b7c', '#665191', '#a05195', '#d45087', '#f95d6a', '#ff7c43', '#ffa600'])
 
     const pie = d3.pie()
         .value((d) => d[1])

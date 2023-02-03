@@ -489,9 +489,9 @@ jQuery(function () {
             .then(module => module.initAddProviderRowLink(addProviderRowLink))
     }
 
-    const graphContainer = document.querySelector('.graph-container')
-    if (graphContainer) {
-        import('./community-tags')
-            .then(module => module.initGraph(graphContainer))
+    const chartContainer = document.querySelector('.chart-container')
+    if (chartContainer) {
+        import(/* webpackChunkName "community-tag-charts" */ './community-tag-charts')
+            .then(module => module.initChart(chartContainer))
     }
 });

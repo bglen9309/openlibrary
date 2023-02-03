@@ -13,7 +13,7 @@ $else:
     <a class="observations-feedback" href="https://forms.gle/wEr1dw3tLQYrC7Rr6">Feedback?</a>
   </div>
   $if total_reviews > 0:
-    $:render_template('observations/graphs', reader_observations)
+    $:render_template('observations/charts', reader_observations)
     <div class="reviews">
     $for o in reader_observations['observations']:
       <span class="review__category">
