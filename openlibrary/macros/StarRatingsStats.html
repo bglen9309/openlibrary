@@ -14,8 +14,9 @@ $ avg = rating_stats.get('avg_rating')
       <span itemprop="ratingValue">$avg</span>
       <span class="dot">·</span>
   </li>
-  <li>
-    <span itemprop="reviewCount">$rating_stats.get('num_ratings', 0)</span> $_("Ratings")
+  <li class="readers-stats__review-count">
+    $ ratings_count = rating_stats.get('num_ratings', 0)
+    <span itemprop="reviewCount">$ratings_count</span> $ungettext("Rating", "Ratings", ratings_count, count=ratings_count)
   </li>
   <li class="reading-log-stat">$stats_by_bookshelf.get('want-to-read', 0) $_("Want to read")</li>
   <li class="reading-log-stat">$stats_by_bookshelf.get('currently-reading', 0) $_("Currently reading")</li>

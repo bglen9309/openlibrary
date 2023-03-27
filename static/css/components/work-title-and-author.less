@@ -101,5 +101,27 @@
         font-size: 0.675em;
       }
     }
+
+    .readers-stats {
+      li.avg-ratings .dot,
+      li:not(.avg-ratings):not(.readers-stats__review-count) {
+        display: none;
+      }
+
+      li.avg-ratings,
+      li.readers-stats__review-count {
+        font-size: 0.85em;
+      }
+
+      // On mobile only, the rating count text has parentheses around it
+      li.readers-stats__review-count::before {
+        content: '(';
+        margin-right: -2px;
+      }
+      li.readers-stats__review-count::after {
+        content: ')';
+        margin: 0 0 0 -1px;
+      }
+    }
   }
 }

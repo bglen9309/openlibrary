@@ -47,7 +47,9 @@
 
       // Setting pseudo-element content to book icon; mask is used to allow for a 'fill' color
       content: '';
+      -webkit-mask: url(../images/icons/open-book.svg);
       mask: url(../images/icons/open-book.svg);
+      -webkit-mask-size: cover;
       mask-size: cover;
       background-color: @primary-blue;
     }
@@ -147,7 +149,9 @@
 // desktop
 @media only screen and (min-width: @width-breakpoint-desktop){
   .mobile-vendor,
-  .cta-button-group.mobile {
+  .cta-button-group.mobile,
+  #read-options > .modal-links > .star-rating-form,
+  .lists-widget-container > #ratingsForm > .star-rating__not-rated {
     display: none;
   }
   .desktop-vendor {
