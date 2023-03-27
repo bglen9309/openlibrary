@@ -171,9 +171,23 @@
   .read-options {
     border: none;
 
-    // Hide desktop 'share' link on mobile
-    .modal-links > div:last-child {
+    // Hide desktop version of 'share' link and ratings form on mobile
+    &> .lists-widget-container > #ratingsForm,
+    &> .modal-links > .share-modal-wrapper {
       display: none;
+    }
+
+    .modal-links > .star-rating-form {
+      .stars {
+        margin-bottom: 0;
+      }
+      .star-rating__not-rated {
+        display: block;
+        font-size: 0.75em;
+        line-height: 1.4;
+        text-align: center;
+        width: 100%;
+      }
     }
   }
   .cta-button-group.mobile {
