@@ -103,6 +103,16 @@
     }
 
     .readers-stats {
+      // When there are no reviews, hide the review count text
+      &__review-count--none {
+        height: 0;
+        margin: 0;
+
+        li.readers-stats__review-count {
+          display: none;
+        }
+      }
+
       li.avg-ratings .dot,
       li:not(.avg-ratings):not(.readers-stats__review-count) {
         display: none;
@@ -111,6 +121,7 @@
       li.avg-ratings,
       li.readers-stats__review-count {
         font-size: 0.85em;
+
       }
 
       // On mobile only, the rating count text has parentheses around it
