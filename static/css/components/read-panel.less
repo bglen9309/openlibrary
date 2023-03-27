@@ -29,6 +29,30 @@
     margin-bottom: 10px;
   }
 
+  // Preview button on mobile appears styled as a text link with a book icon
+  .mobile .cta-btn--preview {
+    color: @primary-blue;
+    margin: -5px auto 15px;
+    padding: 5px 20px 10px; // Increasing click area for mobile text link
+    text-decoration: none;
+    position: relative;
+
+    &::before {
+      width: 22px;
+      height: 18px;
+      display: inline-block;
+      margin-right: 6px;
+      position: relative;
+      top: 2px;
+
+      // Setting pseudo-element content to book icon; mask is used to allow for a 'fill' color
+      content: '';
+      mask: url(../images/icons/open-book.svg);
+      mask-size: cover;
+      background-color: @primary-blue;
+    }
+  }
+
   .waitinglist-message {
     margin: 0 0 10px;
     font-size: 12px;
@@ -119,14 +143,39 @@
   list-style: none;
   font-size: 12px;
 }
+
+// desktop
+@media only screen and (min-width: @width-breakpoint-desktop){
+  .mobile-vendor,
+  .cta-button-group.mobile {
+    display: none;
+  }
+  .desktop-vendor {
+    display: inline;
+  }
+  .cta-button-group.desktop {
+    display: flex;
+  }
+}
+
+// mobile
 @media only screen and (max-width: @width-breakpoint-desktop){
+  .desktop-vendor,
+  .cta-button-group.desktop {
+    display: none;
+  }
   .mobile-vendor {
     display: inline;
   }
-  .desktop-vendor {
-    display: none;
+  .Tools .btn-notice,
+  .read-options {
+    border: none;
+  }
+  .cta-button-group.mobile {
+    display: flex;
   }
 }
+
 // For the button at the top
 @import (less) "components/buttonCta.less";
 // for the share links at the bottom
