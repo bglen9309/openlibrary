@@ -55,12 +55,19 @@
     &.desktop{
       display: inline;
     }
+
+    .share-modal-link {
+      display: none;
+    }
   }
 }
 
 // mobile
 @media only screen and (max-width: @width-breakpoint-desktop) {
   .work-title-and-author {
+    display: flex;
+    justify-content: space-between;
+
     .work-line {
       display: none;
     }
@@ -77,8 +84,21 @@
       font-size: 0.875em;
       margin-bottom: 10px;
 
-      a {
+      &> a {
         text-decoration: none;
+      }
+    }
+
+    .share-modal-link {
+      display: block;
+      margin-top: 8px;
+      text-align: center;
+      text-decoration: none;
+      width: 40px;
+
+      .icon-link__text {
+        color: @dark-grey;
+        font-size: 0.675em;
       }
     }
   }

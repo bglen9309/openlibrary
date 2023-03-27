@@ -170,6 +170,11 @@
   .Tools .btn-notice,
   .read-options {
     border: none;
+
+    // Hide desktop 'share' link on mobile
+    .modal-links > div:last-child {
+      display: none;
+    }
   }
   .cta-button-group.mobile {
     display: flex;
