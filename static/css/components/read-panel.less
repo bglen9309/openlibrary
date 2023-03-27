@@ -149,7 +149,8 @@
 // desktop
 @media only screen and (min-width: @width-breakpoint-desktop){
   .mobile-vendor,
-  .cta-button-group.mobile {
+  .cta-button-group.mobile,
+  .readers-stats__wrapper.mobile {
     display: none;
   }
   .desktop-vendor {
@@ -180,8 +181,52 @@
       display: none;
     }
   }
+
   .cta-button-group.mobile {
     display: flex;
+  }
+
+  .readers-stats__wrapper.mobile {
+    .readers-stats {
+      border: 1px solid @lighter-grey;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      margin: 20px 0 0;
+      padding: 10px 0;
+      width: 100%;
+
+      li {
+        border-right: 1px solid @lighter-grey;
+        display: flex;
+        flex-direction: column-reverse;
+        flex: 1 1 auto;
+        margin: 0;
+        position: relative;
+        text-align: center;
+
+        .readers-stats__label {
+          font-size: 0.85em;
+        }
+
+        &:last-child {
+          border-right: none;
+        }
+
+        // Clearing out the 'dot' spacer content used on desktop
+        &::after {
+          content: '';
+        }
+      }
+
+      li + li {
+        border-right: solid 1px @lighter-grey;
+      }
+
+      li.avg-ratings, li.readers-stats__review-count {
+        display: none;
+      }
+    }
   }
 }
 
