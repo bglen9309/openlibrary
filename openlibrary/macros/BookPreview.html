@@ -1,10 +1,8 @@
-$def with (ocaid, linkback=True, for_desktop=True)
+$def with (ocaid, linkback=True)
 $# :param str ocaid:
 
-$ view_type = 'desktop' if for_desktop else 'mobile'
-$ preview_btn_classes = 'cta-btn cta-btn--shell cta-btn--preview' if for_desktop else 'cta-btn--preview'
-  <div class="cta-button-group $view_type">
-    <a class="$preview_btn_classes"
+  <div class="cta-button-group">
+    <a class="cta-btn--preview"
       data-iframe-src="https://archive.org/details/$ocaid?view=theater&wrapper=false"
       data-iframe-link="https://archive.org/details/$ocaid"
       data-ol-link-track="CTAClick|Preview" href="#bookPreview">$_('Preview')</a>

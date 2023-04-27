@@ -23,7 +23,7 @@ $ waiting_loan_total_time = time() - waiting_loan_start_time
 $ my_turn_to_borrow = waiting_loan and waiting_loan['status'] == 'available' and waiting_loan['position'] == 1
 
 $if secondary_action:
-  $:macros.BookPreview(ocaid, linkback=not no_index, for_desktop=False)
+  $:macros.BookPreview(ocaid, linkback=not no_index)
 
 $if not waiting_loan:
   $ book_provider = get_book_provider(doc)
