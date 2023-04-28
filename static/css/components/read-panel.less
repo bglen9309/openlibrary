@@ -150,6 +150,8 @@
 @media only screen and (min-width: @width-breakpoint-desktop){
   .mobile-vendor,
   .cta-button-group.mobile,
+  #read-options > .modal-links > .star-rating-form,
+  .lists-widget-container > #ratingsForm > .star-rating__not-rated,
   .readers-stats__wrapper.mobile {
     display: none;
   }
@@ -174,10 +176,10 @@
   .read-options {
     border: none;
 
-    // Hide desktop version of 'share' link and ratings form on mobile
+    // Hide desktop version of modal links and ratings form on mobile
     &> hr,
     &> .lists-widget-container > #ratingsForm,
-    &> .modal-links > .share-modal-wrapper {
+    &> .modal-links {
       display: none;
     }
   }
@@ -187,13 +189,22 @@
   }
 
   .readers-stats__wrapper.mobile {
+    border: 1px solid @lighter-grey;
+    border-radius: 5px;
+    padding: 10px 0;
+
+    .share-modal-wrapper {
+      display: none;
+    }
+
+    &> hr {
+      margin: 0 20px;
+    }
+
     .readers-stats {
-      border: 1px solid @lighter-grey;
-      border-radius: 5px;
       display: flex;
       justify-content: space-between;
-      margin: 20px 0 0;
-      padding: 10px 0;
+      margin: 0;
       width: 100%;
 
       li {

@@ -41,12 +41,26 @@
     justify-content: space-evenly;
 
     .icon-link {
-      flex-direction: row;
+      padding: 0;
+    }
 
-      &__text {
-        color: @grey;
-        font-size: 1em;
-      }
+    .icon-link__image {
+      width: 2.2em;
+      height: 2.2em;
+    }
+
+    .icon-link__text {
+      padding-top: 3px;
+    }
+
+    .stars {
+      margin-bottom: 0;
+    }
+
+    .star-rating__not-rated {
+      display: block;
+      font-size: 0.75em;
+      text-align: center;
     }
   }
 }

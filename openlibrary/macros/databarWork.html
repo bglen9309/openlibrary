@@ -66,6 +66,10 @@ $if isbn_10 and not asin:
         <div class="readers-stats__wrapper mobile">
           $ star_ratings_stats = macros.StarRatingsStats(work)
           $:star_ratings_stats
+
+          $if modal_links:
+            <hr>
+            $:modal_links
         </div>
 
         $if editions_page:
