@@ -29,6 +29,32 @@
     margin-bottom: 10px;
   }
 
+  // Preview button appears styled as a text link with a book icon
+  .cta-btn--preview {
+    color: @primary-blue;
+    margin: -5px auto 15px;
+    padding: 5px 20px 10px; // Increasing click area for mobile text link
+    text-decoration: none;
+    position: relative;
+
+    &::before {
+      width: 22px;
+      height: 18px;
+      display: inline-block;
+      margin-right: 6px;
+      position: relative;
+      top: 2px;
+
+      // Setting pseudo-element content to book icon; mask is used to allow for a 'fill' color
+      content: '';
+      -webkit-mask: url(../images/icons/open-book.svg);
+      mask: url(../images/icons/open-book.svg);
+      -webkit-mask-size: cover;
+      mask-size: cover;
+      background-color: @primary-blue;
+    }
+  }
+
   .waitinglist-message {
     margin: 0 0 10px;
     font-size: 12px;
@@ -119,14 +145,110 @@
   list-style: none;
   font-size: 12px;
 }
+
+// desktop
+@media only screen and (min-width: @width-breakpoint-desktop){
+  .mobile-vendor,
+  .cta-button-group.mobile,
+  #read-options > .modal-links > .star-rating-form,
+  .lists-widget-container > #ratingsForm > .star-rating__not-rated,
+  .readers-stats__wrapper.mobile {
+    display: none;
+  }
+  .desktop-vendor {
+    display: inline;
+  }
+  .cta-button-group.desktop {
+    display: flex;
+  }
+}
+
+// mobile
 @media only screen and (max-width: @width-breakpoint-desktop){
+  .desktop-vendor,
+  .cta-button-group.desktop {
+    display: none;
+  }
   .mobile-vendor {
     display: inline;
   }
-  .desktop-vendor {
-    display: none;
+  .Tools .btn-notice,
+  .read-options {
+    border: none;
+
+    // Hide desktop version of modal links and ratings form on mobile
+    &> hr,
+    &> .lists-widget-container > #ratingsForm,
+    &> .modal-links {
+      display: none;
+    }
+
+    .lists-widget-container {
+      margin-top: 14px;
+    }
+
+    .last-read-date {
+      margin-bottom: 14px;
+    }
+  }
+
+  .cta-button-group.mobile {
+    display: flex;
+  }
+
+  .readers-stats__wrapper.mobile {
+    border: 1px solid @lighter-grey;
+    border-radius: 5px;
+    padding: 10px 0;
+
+    .share-modal-wrapper {
+      display: none;
+    }
+
+    &> hr {
+      margin: 0 20px;
+    }
+
+    .readers-stats {
+      display: flex;
+      justify-content: space-between;
+      margin: 0;
+      width: 100%;
+
+      li {
+        border-right: 1px solid @lighter-grey;
+        display: flex;
+        flex-direction: column-reverse;
+        flex: 1 1 auto;
+        margin: 0;
+        position: relative;
+        text-align: center;
+
+        .readers-stats__label {
+          font-size: 0.85em;
+        }
+
+        &:last-child {
+          border-right: none;
+        }
+
+        // Clearing out the 'dot' spacer content used on desktop
+        &::after {
+          content: '';
+        }
+      }
+
+      li + li {
+        border-right: solid 1px @lighter-grey;
+      }
+
+      li.avg-ratings, li.readers-stats__review-count {
+        display: none;
+      }
+    }
   }
 }
+
 // For the button at the top
 @import (less) "components/buttonCta.less";
 // for the share links at the bottom
