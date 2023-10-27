@@ -5,7 +5,7 @@ import logging
 import web
 import json
 import requests
-from typing import Any
+from typing import Any, Self
 from collections import defaultdict
 from dataclasses import dataclass, field
 
@@ -1136,7 +1136,7 @@ class Tag(Thing):
         return self.name or "unnamed"
 
     @classmethod
-    def find(cls, tag_name, tag_type):
+    def find(cls, tag_name, tag_type) -> Self | None:
         """Returns a Tag object for a given tag name and tag type."""
         q = {'type': '/type/tag', 'name': tag_name, 'tag_type': tag_type}
         match = list(web.ctx.site.things(q))
@@ -1154,10 +1154,12 @@ class Tag(Thing):
     ):
         """Creates a new Tag object."""
         current_user = web.ctx.site.get_user()
+        # XXX : ImportBot?
         patron = current_user.get_username() if current_user else 'ImportBot'
         key = web.ctx.site.new_key('/type/tag')
         from openlibrary.accounts import RunAs
 
+        # XXX : What is happening here?
         with RunAs(patron):
             web.ctx.ip = web.ctx.ip or ip
             web.ctx.site.save(
@@ -1165,8 +1167,13 @@ class Tag(Thing):
                     'key': key,
                     'name': tag_name,
                     'tag_description': tag_description,
+                    # XXX : tag_type is a string or an empty list?
+                    # Source of truth says string.  Check if this is
+                    # being treated like a list elsewhere
                     'tag_type': tag_type or [],
-                    'tag_plugins': json.loads(tag_plugins or "[]"),
+                    # XXX : Same story... This should be a list of dicts.
+                    # Or, more likely, a list of `/type/tag_plugins`
+                    'tag_plugins': tag_plugins or [],
                     'type': {"key": '/type/tag'},
                 },
                 comment=comment,

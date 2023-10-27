@@ -5,6 +5,7 @@ import 'jquery-ui/ui/widgets/sortable';
 
 const pluginsTypesList = ['RelatedSubjects', 'QueryCarousel', 'ListCarousel']
 
+// XXX : This can be done in the form itself.
 function checkRequiredFields() {
     const nameInput = document.getElementById('tag_name');
     const descriptionInput = document.getElementById('tag_description');
@@ -164,6 +165,7 @@ function parseAndValidatePluginsData(plugin) {
             return 'Missing equal sign: Each parameter should be in the form of \'key=value\'';
         }
         const splitResults = pair.split('=');
+        // XXX : What happens when `=` is a part of the value?
         if (splitResults.length !== 2) {
             return 'Too many equal signs: Each parameter should be in the form of \'key=value\'';
         }

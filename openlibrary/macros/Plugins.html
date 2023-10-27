@@ -2,4 +2,6 @@ $def with (plugins)
 
 $for plugin in plugins:
     $ plugin_type, plugin_data = process_plugins_data(plugin)
+    $# XXX : Macros with complex queries not being rendered. Or,
+    $# nothing rendered if query for carousel returns nothing...
     $:macros[plugin_type](**plugin_data)

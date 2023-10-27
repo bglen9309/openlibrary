@@ -11,6 +11,7 @@ from infogami.utils.view import add_flash_message, public
 from infogami.infobase.client import ClientException
 from infogami.utils import delegate
 
+# XXX : Not accessed.  Is it needed?  Does it need to be registered?
 from openlibrary.plugins.openlibrary.processors import urlsafe
 from openlibrary.i18n import gettext as _
 import logging
@@ -35,16 +36,19 @@ class addtag(delegate.page):
         """Main user interface for adding a tag to Open Library."""
 
         if not self.has_permission():
+            # XXX : Is this the right exception?  It's new to me...
             raise common.PermissionDenied(message='Permission denied to add tags')
 
         return render_template('tag/add', recaptcha=get_recaptcha())
 
+    # XXX : Necessary?  Maybe if reused...  That decorator works here as well.
     def has_permission(self) -> bool:
         """
         Can a tag be added?
         """
 
         user = web.ctx.site.get_user()
+        # XXX : Admins?
         return user and (user.is_usergroup_member('/usergroup/super-librarians'))
 
     def POST(self):
@@ -55,11 +59,15 @@ class addtag(delegate.page):
             tag_plugins="",
         )
 
+        # XXX : Is this needed?  Also, `i` doesn't need to be passed in.
         if spamcheck.is_spam(i, allow_privileged_edits=True):
             return render_template(
                 "message.html", "Oops", 'Something went wrong. Please try again later.'
             )
 
+        # XXX : We're allowing anybody to create tags?
+        # Can't access the creation UI while unauthenticated, but this shouldn't be here.
+        # Attack vector.
         if not web.ctx.site.get_user():
             recap = get_recaptcha()
             if recap and not recap.validate():
@@ -69,49 +77,33 @@ class addtag(delegate.page):
                     'Please <a href="javascript:history.back()">go back</a> and try again.',
                 )
 
+        # XXX : What is this doing?  Why is this needed?
         i = utils.unflatten(i)
-        match = self.find_match(i)  # returns None or Tag (if match found)
+        match = self.find_match(i)
 
-        if match:
-            # tag match
-            return self.tag_match(match)
+        tag = Tag.find(i.tag_name, i.tag_type)
+        if tag:
+            key = tag.key
         else:
-            # no match
-            return self.no_match(i)
+            # XXX : Save tag_plugins as a list of dicts
+            key = Tag.create(i.tag_name, i.tag_description, i.tag_type, i.tag_plugins)
 
-    def find_match(self, i: web.utils.Storage):
-        """
-        Tries to find an existing tag that matches the data provided by the user.
-        """
-        return Tag.find(i.tag_name, i.tag_type)
-
-    def tag_match(self, match: list) -> NoReturn:
-        """
-        Action for when an existing tag has been found.
-        Redirect user to the found tag's edit page to add any missing details.
-        """
-        tag = web.ctx.site.get(match[0])
-        raise safe_seeother(tag.key + "/edit")
-
-    def no_match(self, i: web.utils.Storage) -> NoReturn:
-        """
-        Action to take when no tags are found.
-        Creates a new Tag.
-        Redirects the user to the tag's home page
-        """
-        key = Tag.create(i.tag_name, i.tag_description, i.tag_type, i.tag_plugins)
         raise safe_seeother(key)
 
 
+# XXX : What existing definition of addtag?
 # remove existing definitions of addtag
-delegate.pages.pop('/addtag', None)
+# delegate.pages.pop('/addtag', None)
 
 
+# XXX : Why is this here?
+# Note : path defaults to `/{classname}`
 class addtag(delegate.page):  # type: ignore[no-redef] # noqa: F811
     def GET(self):
         raise web.redirect("/tag/add")
 
 
+# XXX : Does `addbook.py` have an edit handler?
 class tag_edit(delegate.page):
     path = r"(/tags/OL\d+T)/edit"
 
@@ -134,19 +126,26 @@ class tag_edit(delegate.page):
         if tag is None:
             raise web.notfound()
 
+        # XXX : Is _comment being POSTed today?
         i = web.input(_comment=None)
         formdata = self.process_input(i)
         try:
             if not formdata:
                 raise web.badrequest()
             elif "_delete" in i:
+                # XXX : Is this how deletes are done elsewhere?  How does the
+                # TypeChanger do this?
                 tag = web.ctx.site.new(
                     key, {"key": key, "type": {"key": "/type/delete"}}
                 )
+                # XXX : _save seems like the wrong thing to use here.  Is this
+                # done with other models?
                 tag._save(comment=i._comment)
                 raise safe_seeother(key)
             else:
+                # XXX : `update` doesn't save the record?
                 tag.update(formdata)
+                # XXX : _save !!!
                 tag._save(comment=i._comment)
                 raise safe_seeother(key)
         except (ClientException, ValidationException) as e:
@@ -154,6 +153,12 @@ class tag_edit(delegate.page):
             return render_template("type/tag/edit", tag)
 
     def process_input(self, i):
+        # XXX : Make sure that any extra data in i is not being saved on update
+        # XXX : Prep for future state, when ready:
+        '''
+        Plugins will need to be adapted to a list of dicts
+        '''
+        # XXX : Nearly certain that unflatten is not needed
         i = utils.unflatten(i)
         tag = trim_doc(i)
         return tag

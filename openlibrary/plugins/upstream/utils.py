@@ -1315,15 +1315,19 @@ def get_location_and_publisher(loc_pub: str) -> tuple[list[str], list[str]]:
     return ([], [loc_pub.strip(STRIP_CHARS)])
 
 
+# XXX : Is this the right place?  It could be, but maybe not...
 @public
 def get_related_subjects_query() -> str:
     """
     Returns a query string for related subjects page carousel.
     """
+    # XXX : Could this work?  Doubtful... Pass subjects in instead.
     i = web.input(subjects='')
     if not i.subjects:
         return 'None'
+    # XXX : Delimiter madness... Pass subjects in as a list.
     subjects = i.subjects.split('&')
+    # XXX : Unit testing this could be helpful
     return 'subject:("' + ('" AND "').join(subjects) + '")'
 
 

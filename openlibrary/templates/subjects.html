@@ -9,10 +9,7 @@ $ has_tag = 'tag' in page
 
 <div id="scrollHere"></div>
 
-<!--
-  Able to fetch Tag with the same name as the subject and use it's data to enrich the page via page.tag
--->
-
+$# Able to fetch Tag with the same name as the subject and use it's data to enrich the page via page.tag
 <div class="page-heading-search-box">
     $if can_add_tag:
       <div class="subjectTagEdit">
@@ -44,6 +41,7 @@ $ has_tag = 'tag' in page
 <div class="contentBody">
   $if has_tag and 'plugins' in page.tag:
     <div class="subject-plugins-section">
+      $# XXX : Why is this a macro?
       $:macros.Plugins(page.tag['plugins'])
     </div>
   $ default_carousel_title = _('Books about %(name)s', name=page.name)

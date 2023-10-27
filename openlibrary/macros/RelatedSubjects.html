@@ -3,6 +3,7 @@ $def with(subjects)
 $# Takes following parameters
 $# * subjects (str) -- A string containing a comma-separated list of subjects
 
+$# XXX : Comma-separated?  Investigate passing a list of strings to this macro
 $ subject_filters = subjects.split('+')
 
 <body id="related-subjects">
@@ -13,6 +14,7 @@ $ subject_filters = subjects.split('+')
     </div>
     <div id="related-subjects-carousel">
         $ query_string = get_related_subjects_query()
+        $# XXX : `key` should be unique.  A problem if more than one of these will appear on a single page.
         $:macros.QueryCarousel(query=query_string, title=_("You might also like"), key="related-subjects-carousel")
     </div>
 </body>

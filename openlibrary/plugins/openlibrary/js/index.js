@@ -324,24 +324,25 @@ jQuery(function () {
             .then(module => module.initAddBookImport());
     }
 
-    if (document.getElementById('addtag')) {
-        import(/* webpackChunkName: "plugins_form" */ './plugins_form.js')
-            .then(module => {
-                module.initPluginsForm();
-                module.initAddTagForm();
-            });
-    }
+    const addTagElem = document.getElementById('addtag')
+    const editTagElem = document.getElementById('edittag')
 
-    if (document.getElementById('edittag')) {
-        import(/* webpackChunkName: "plugins_form" */ './plugins_form.js')
-            .then(module => {
-                module.initPluginsForm();
-                module.initEditTagForm();
-            });
+    if (addTagElem || editTagElem) {
+        import(/* webpackChunkName: "plugins-form" */ './plugins_form.js')
+            .then((module) => {
+                module.initPluginsForm()
+
+                if (addTagElem) {
+                    module.initAddTagForm();
+                }
+                if (editTagElem) {
+                    module.initEditTagForm();
+                }
+            })
     }
 
     if (document.getElementById('related-subjects')) {
-        import(/* webpackChunkName: "plugins_form" */ './related_subjects.js')
+        import(/* webpackChunkName: "related-subjects" */ './related_subjects.js')
             .then(module => {
                 module.initRelatedSubjectsCarousel();
             });

@@ -13,7 +13,9 @@ $putctx("robots", "noindex,nofollow")
 
 <div id="contentBody">
 
-    <form id="edittag" name="edit" method="post" action="" class="olform validate">
+    $# XXX : Naming conventions : `id`
+    $# XXX : `validate` class gives this form validation, somehow.  Check how.
+    <form id="edittag" name="edit" method="post" action="$(page.key)/edit" class="olform validate">
         <div class="formElement">
             <div class="label">
                 <label for="name">$_("Label")</label>*<span class="tip">$_("Required field")</span>
@@ -32,6 +34,7 @@ $putctx("robots", "noindex,nofollow")
             </div>
         </div>
 
+        $# `page.tag_plugins` is a list of strings
         $:render_template("tag/pluginsForm", plugins=page.tag_plugins)
 
         <div class="formElement">

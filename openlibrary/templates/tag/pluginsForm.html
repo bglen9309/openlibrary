@@ -10,15 +10,18 @@ $def with (plugins=None)
         <thead>
             <tr>
                 <th>
+                    $# XXX : `label`? For input `plugins_type`?  This isn't right
                     <label for="plugins_type" class="tip">$_("Plugin Type")</label>
                 </th>
                 <th>
+                    $# XXX : Same issue as previous comment
                     <label for="plugin_data_input" class="tip">$_("Plugin Parameters")</label>
                 </th>
                 <th></th>
                 <th></th>
             </tr>
         </thead>
+        $# XXX : id --- is it needed?
         <tbody id="pluginsFormRows">
             $if plugins:
                 $ plugins = load_plugin_json(plugins)
@@ -26,6 +29,7 @@ $def with (plugins=None)
                     $ plugin_type, plugin_data = display_plugins_data(plugin)
                     <tr class="plugins-input-row">
                         <td>
+                            $# XXX : Static `id` within a for loop.
                             <select id="plugins_type" class="select-tag-plugins-container">
                                 <option value="$plugin_type">$plugin_type</option>
                                 $for other_plugin_type in get_plugin_types():
@@ -34,13 +38,15 @@ $def with (plugins=None)
                             </select>
                         </td>
                         <td>
-                            <input id="plugin_data_input">$plugin_data</input>
+                            $# XXX : Static `id` within a for loop.
+                            <input id="plugin_data_input" value="$plugin_data">
                         </td>
                         <td><span class="delete-plugin-btn">[X]</span></td>
                         <td><span class="drag-handle">☰</span></td>
                     </tr>
         </tbody>
     </table>
+    $# XXX : One error message per row?
     <div id="plugin_errors" class="red hidden"></div>
     <button type="button" class="addPluginBtn">Add Plugin</button>
 </div>
