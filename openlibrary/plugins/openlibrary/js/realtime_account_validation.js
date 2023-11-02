@@ -87,8 +87,10 @@ export function initRealTimeValidation() {
         e.preventDefault();
         if (window.grecaptcha) {
             console.log('has recaptcha')
-            let result = window.grecaptcha.execute()
-            console.log(result)
+            window.grecaptcha.execute()
+                .then(() => {
+                    window.grecaptcha.render(document.querySelector('#recaptcha'), {}, true)
+                })
         }
         if (! (window.grecaptcha && window.grecaptcha.getResponse().length)) {
             console.log('no recaptcha response')
