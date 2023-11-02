@@ -85,19 +85,16 @@ export function initRealTimeValidation() {
 
     $('#signup').on('click', function(e) {
         e.preventDefault();
-        if (window.grecaptcha) {
-            console.log('has recaptcha')
-            window.grecaptcha.execute()
-                .then(() => {
-                    window.grecaptcha.render(document.querySelector('#recaptcha'), {}, true)
-                })
+        if (!window.grecaptcha) {
+            return
         }
-        if (! (window.grecaptcha && window.grecaptcha.getResponse().length)) {
-            console.log('no recaptcha response')
-            return;
-        }
-        console.log('recaptcha passed')
-        return
+        window.grecaptcha.execute()
+            .then(resp => {
+                if (!resp.length) {
+                    window.grecaptcha.reset()
+                    return
+                }
+            })
         validateEmail();
         validateUsername();
         validatePasswords();
