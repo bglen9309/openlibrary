@@ -89,15 +89,10 @@ export function initRealTimeValidation() {
             return
         }
         window.grecaptcha.execute()
-            .then(resp => {
-                if (!resp.length) {
-                    window.grecaptcha.reset()
-                    return
-                }
-                validateEmail();
-                validateUsername();
-                validatePasswords();
-                $(this).closest('form').trigger('submit');
-            })
+
+        validateEmail();
+        validateUsername();
+        validatePasswords();
+        $(this).closest('form').trigger('submit');
     });
 }
