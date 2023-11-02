@@ -61,11 +61,13 @@ $else:
 
         <div class="formElement bottom">
             <br/>
-            $ sitekey = classes = ''
+            $ sitekey = classes = data_size = ''
             $if form.has_recaptcha:
                 $ classes = 'g-recaptcha'
+                $ data_size = "data-size=%s" % 'invisible'
                 $ sitekey = "data-sitekey=%s" % form['recaptcha'].public_key
-            <button type="submit" name="signup" id="signup" class="larger $classes" $sitekey>$_("Sign Up")</button>
+                
+            <button type="submit" name="signup" id="signup" class="larger $classes" $data_size $sitekey>$_("Sign Up")</button>
             <a href="javascript:history.go(-1);" class="smaller attn">$_("Cancel")</a>
         </div>
     </form>
