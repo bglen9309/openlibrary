@@ -94,10 +94,10 @@ export function initRealTimeValidation() {
                     window.grecaptcha.reset()
                     return
                 }
+                validateEmail();
+                validateUsername();
+                validatePasswords();
+                $(this).closest('form').trigger('submit');
             })
-        validateEmail();
-        validateUsername();
-        validatePasswords();
-        $(this).closest('form').trigger('submit');
     });
 }
