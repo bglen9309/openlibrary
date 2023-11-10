@@ -21,7 +21,7 @@ import logging
 import _init_path  # Imported for its side effect of setting PYTHONPATH
 from infogami import config
 from openlibrary.config import load_config
-from openlibrary.core.imports import Batch
+from openlibrary.core.imports import Batch, ImportItem
 from scripts.solr_builder.solr_builder.fn_to_cli import FnToCLI
 
 
@@ -37,6 +37,17 @@ def format_date(date: str, only_year: bool) -> str:
     return date[:4] if only_year else f"{date[0:4]}-{date[4:6]}-{date[6:8]}"
 
 
+def is_isbn_13(isbn):
+    """
+    Returns True if given isbn is an ISBN-13.
+
+    Given isbn is expected to be a string of digits, or
+    a single whitespace character if no ISBN was found
+    in a record.
+    """
+    return isbn and isbn[0].isdigit()
+
+
 def map_book_to_olbook(book, promise_id):
     asin_is_isbn_10 = book.get('ASIN') and book.get('ASIN')[0].isdigit()
     publish_date = book['ProductJSON'].get('PublicationDate')
@@ -49,11 +60,11 @@ def map_book_to_olbook(book, promise_id):
             **({'amazon': [book.get('ASIN')]} if not asin_is_isbn_10 else {}),
             **(
                 {'better_world_books': [isbn]}
-                if not (isbn and isbn[0].isdigit())
+                if not is_isbn_13(isbn)
                 else {}
             ),
         },
-        **({'isbn_13': [isbn]} if (isbn and isbn[0].isdigit()) else {}),
+        **({'isbn_13': [isbn]} if is_isbn_13(isbn) else {}),
         **({'isbn_10': [book.get('ASIN')]} if asin_is_isbn_10 else {}),
         **({'title': title} if title else {}),
         'authors': [{"name": book['ProductJSON'].get('Author') or '????'}],
@@ -71,12 +82,68 @@ def map_book_to_olbook(book, promise_id):
     return olbook
 
 
+def filter_promise_items(items):
+    """
+    Attempts to find staged records corresponding to the given promise items.
+
+    If a promise item record has an ISBN-13, we attempt to fetch a staged JIT
+    import record in the DB.  If a JIT record exists, a tuple containing the
+    JIT import item and the promise item is added to the jit_records list.
+    Otherwise, the promise item record is added to the unmatched_records list.
+
+    After all promise item records are processed, the unmatched_records and
+    jit_records lists are returned.
+    """
+    unmatched_records = []
+    jit_records = []
+
+    for item in items:
+        isbn = item.get('ISBN') or ' '
+        import_record = None
+        if is_isbn_13(isbn) and (import_record := ImportItem.find_by_identifier(isbn, status='staged')):
+            jit_records.append((import_record, item))
+        else:
+            unmatched_records.append(item)
+
+    return unmatched_records, jit_records
+
+
+def jit_import(jit_records):
+    """
+    Updates given staged import items, then changes their import
+    status to "pending".
+
+    jit_records is a list of two-tuples, each containing the JIT
+    ImportItem and the promise item record.
+    """
+    def merge_records(jit_record, ol_book):
+        """
+        Merges the given ol_book record into the staged jit_record data.
+
+        Returns the merged record.
+        """
+        # XXX : Merge ol_book into jit_record and return the result
+        return {}
+
+    for import_record, book in jit_records:
+        ol_book = map_book_to_olbook(book)
+        updated_record = merge_records(import_record.get('data', {}), ol_book)
+
+        # XXX : Would be nice if these were updated in bulk 
+        import_record.update_record(updated_record)
+        import_record.mark_pending()
+
+
 def batch_import(promise_id, batch_size=1000):
     url = "https://archive.org/download/"
     date = promise_id.split("_")[-1]
-    books = requests.get(f"{url}{promise_id}/DailyPallets__{date}.json").json()
-    batch = Batch.find(promise_id) or Batch.new(promise_id)
-    olbooks = [map_book_to_olbook(book, promise_id) for book in books]
+    promise_items = requests.get(f"{url}{promise_id}/DailyPallets__{date}.json").json()
+
+    filtered_books, jit_records = filter_promise_items(promise_items)
+    olbooks = [map_book_to_olbook(book, promise_id) for book in filtered_books]
+    jit_import(jit_records)
+
+    batch = Batch.find(promise_id) or Batch.new(promise_id)    
     batch_items = [{'ia_id': b['local_id'][0], 'data': b} for b in olbooks]
     for i in range(0, len(batch_items), batch_size):
         batch.add_items(batch_items[i : i + batch_size])
@@ -127,7 +194,7 @@ def main(ol_config: str, date: str):
     load_config(ol_config)
     params = parse_date(date)
     promise_ids = get_promise_items(**params)
-    for i, promise_id in enumerate(promise_ids):
+    for _, promise_id in enumerate(promise_ids):
         batch_import(promise_id)
 
 

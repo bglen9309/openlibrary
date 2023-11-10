@@ -111,24 +111,31 @@ class ImportItem(web.storage):
         return map(ImportItem, result)
 
     @staticmethod
-    def find_by_identifier(identifier):
-        result = db.where("import_item", ia_id=identifier)
+    def find_by_identifier(identifier, **kwargs):
+        result = db.where("import_item", ia_id=identifier, **kwargs)
         if result:
             return ImportItem(result[0])
 
-    def set_status(self, status, error=None, ol_key=None):
+    def set_status(self, status, error=None, ol_key=None, set_import_time=True):
         id_ = self.ia_id or f"{self.batch_id}:{self.id}"
         logger.info("set-status %s - %s %s %s", id_, status, error, ol_key)
         d = {
             "status": status,
             "error": error,
             "ol_key": ol_key,
-            "import_time": datetime.datetime.utcnow(),
+            "import_time": datetime.datetime.utcnow() if set_import_time else None,
         }
-        if status != 'failed':
+        if status not in ('failed', 'pending'):
             d = dict(**d, data=None)
         db.update("import_item", where="id=$id", vars=self, **d)
         self.update(d)
+
+    def update_record(self, data):
+        id_ = self.ia_id or f"{self.batch_id}:{self.id}"
+        logger.info("update-record %s - %s", id_, data)
+
+        db.update("import_item", where="id=$id", vars=self, data=data)
+        self.update({"data": data})
 
     def mark_failed(self, error):
         self.set_status(status='failed', error=error)
@@ -141,6 +148,9 @@ class ImportItem(web.storage):
 
     def mark_modified(self, ol_key):
         self.set_status(status='modified', ol_key=ol_key)
+
+    def mark_pending(self):
+        self.set_status(status='pending', set_import_time=False)
 
     @classmethod
     def delete_items(
