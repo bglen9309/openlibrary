@@ -130,12 +130,6 @@
                   <label>
                     <input type="radio" v-model="sortState.order" value="old">Oldest
                   </label>
-                  <label>
-                    <input type="radio" v-model="sortState.order" value="rating">Top Rated
-                  </label>
-                  <label>
-                    <input type="radio" v-model="sortState.order" value="readinglog">Reading Log
-                  </label>
                   <label title="I.e. Classification order. Note some books maybe missing when sorting by shelf order–we're working on it.">
                     <input type="radio" v-model="sortState.order" :value="`${settingsState.selectedClassification.field}_sort asc`" >Shelf Order
                   </label>
@@ -346,7 +340,7 @@ export default {
 </script>
 
 
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+<style src="vue-multiselect/dist/vue-multiselect.esm.css"></style>
 <style lang="less">
 
 
