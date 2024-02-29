@@ -544,4 +544,11 @@ jQuery(function () {
         import(/* webpackChunkName: "affiliate-links" */ './affiliate-links')
             .then(module => module.initAffiliateLinks(affiliateLinksSection))
     }
+
+    // "Copy to clipboard" affordances:
+    const copyToClipboardAffordances = document.querySelectorAll('.copy-to-clipboard')
+    if (copyToClipboardAffordances.length) {
+        import(/* webpackChunkName: "copy-to-clipboard" */ './copy-to-clipboard')
+            .then(module => module.initCopyToClipboardAffordances(copyToClipboardAffordances))
+    }
 });
